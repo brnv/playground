@@ -1,0 +1,68 @@
+#!/bin/bash
+
+function help() {
+	echo "Usage:"
+	echo "hours-left [-d|-w|-m|-y]"
+	echo
+	echo "Options:"
+	echo "-d for current day (default)"
+	echo "-w week"
+	echo "-m month"
+	echo "-y year"
+}
+
+RANGE=day
+
+while getopts "h?dwmy" opt; do
+	case $opt in
+		h|\?)
+			help
+			exit 0
+			;;
+		d)
+			;;
+		w)
+			RANGE=week
+			;;
+		m)
+			RANGE=month
+			;;
+		y)
+			RANGE=year
+			;;
+	esac
+done
+
+case $RANGE in
+	day)
+		TO=`date --date="00:00:00 1 day" +%s`
+		;;
+	week)
+		DAY_OF_THE_WEEK=`date +%u`
+		OFFSET=$((7 - $DAY_OF_THE_WEEK + 1))
+		TO=`date --date="00:00:00 $OFFSET day" +%s`
+		;;
+	month)
+		DAYS_IN_MONTH=`cal | xargs -n1 | tail -1`
+		DAY_OF_THE_MONTH=`date +%d`
+		OFFSET=$(($DAYS_IN_MONTH - $DAY_OF_THE_MONTH + 1))
+		TO=`date --date="00:00:00 $OFFSET day" +%s`
+		;;
+	year)
+		NEXT_YEAR=$((`date +%Y` + 1))
+		TO=`date --date="1 Jan $NEXT_YEAR 00:00:00" +%s`
+		;;
+esac
+
+NOW=`date +%s`
+RANGE_IN_SECONDS=$(($TO - $NOW))
+HOURS_LEFT=$(($RANGE_IN_SECONDS / 3600))
+
+if [[ $RANGE == day ]]; then
+	MINUTES_LEFT=$(($RANGE_IN_SECONDS / 60 % 60))
+	SECONDS_LEFT=$(($RANGE_IN_SECONDS % 60))
+	printf "%02d:%02d:%02d" $HOURS_LEFT $MINUTES_LEFT $SECONDS_LEFT
+	echo
+else
+	echo $HOURS_LEFT
+fi
