@@ -1,0 +1,8 @@
+{application, kvs, [
+	{description,  "Simple key value storage"},
+	{vsn,          git},
+	{mod,          {kvs_app, []}},
+	{applications, []},
+	{registered, [kvs]},
+	{env, []}
+]}.
