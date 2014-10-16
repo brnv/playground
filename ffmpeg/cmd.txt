@@ -1,0 +1,17 @@
+as is:
+	ffmpeg -y -i input.mp4 -c:a copy -c:v copy output.mp4
+
+scaling & padding:
+	ffmpeg -y -i input.flv -c:a copy -f flv -c:v libx264 \
+	-vf "[in]scale=720:trunc(720/a/2)*2[s], \
+		 [s]pad=720:405:0:trunc(405-trunc(720/a/2)*2)/2[sp]" output.flv
+
+scaling, padding & top right watermarking:
+	ffmpeg -y -i input.flv -c:a copy -f flv -c:v libx264 \
+	-vf "[in]scale=720:trunc(720/a/2)*2[s], \
+		 [s]pad=720:405:0:trunc(405-trunc(720/a/2)*2)/2[sp], \
+		 movie=/tmp/wm-543F7BCB238A85FB268B4568.png[w], \
+		 [sp][w]overlay=main_w-overlay_w-10:10[out]" output.flv
+
+thumbnailing:
+	-y -i input.mp4 -ss 10 -vframes 1 output.jpg
