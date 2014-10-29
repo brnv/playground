@@ -6,22 +6,24 @@ import (
 	"net/http"
 	"os/exec"
 
-	"github.com/gocraft/web"
+	"github.com/brnv/web"
 )
 
 func main() {
 	type Context struct{}
 	router := web.New(Context{}).
-		Get("/", handleRoot)
+		Get("/:num", handleRoot)
 
-	err := http.ListenAndServe(":80", router)
+	err := http.ListenAndServe(":8011", router)
 	if err != nil {
 		log.Fatal("[error]", err)
 	}
 }
 
 func handleRoot(w web.ResponseWriter, r *web.Request) {
-	cmd := exec.Command("cowsay", fmt.Sprintf("Privet, %s!", r.RemoteAddr))
+	numbers := exec.Command("curl", "http://number.s/"+r.PathParams["num"])
+	output, _ := numbers.Output()
+	cmd := exec.Command("cowsay", fmt.Sprintf("%s", output))
 	answer, err := cmd.Output()
 	if err != nil {
 		log.Fatal("[error]", err)
