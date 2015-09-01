@@ -32,10 +32,12 @@ class PumpIronCrawler(scrapy.Spider):
 
     def parse_exercise(self, response):
         yield {
-            'title': response.css('h1.content_title::text').extract(),
-            'description': response.css('div.field-type-text-with-summary div.field-item p::text').extract(),
+            'name': response.css('h1.content_title::text').extract(),
+            'rules': response.css('div.field-type-text-with-summary div.field-item p::text').extract(),
             'images': response.css('div.field-type-image img::attr(src)').extract(),
-            'muscles_base': response.css('div.view-display-id-muscle_base a::text').extract(),
-            'muscles_sub': response.css('div.view-display-id-muscle_sub a::text').extract(),
+            'inventory': response.css('div.view-display-id-exercize_stock div.stock-title a::text').extract(),
+            'muscles_additional': response.css('div.view-display-id-muscle_sub a::text').extract(),
+            'muscles_primary': response.css('div.view-display-id-muscle_base a::text').extract(),
+            'muscles_group': response.css('div.field-name-field-muscle-group div.field-item a::text').extract(),
             'link': response.url,
         }
