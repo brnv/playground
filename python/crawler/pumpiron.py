@@ -32,6 +32,7 @@ class PumpIronCrawler(scrapy.Spider):
 
     def parse_exercise(self, response):
         yield {
+            'tips': response.css('div.field-name-field-tips div.content_tips p::text').extract(),
             'name': response.css('h1.content_title::text').extract(),
             'rules': response.css('div.field-type-text-with-summary div.field-item p::text').extract(),
             'images': response.css('div.field-type-image img::attr(src)').extract(),
